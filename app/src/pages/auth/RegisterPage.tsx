@@ -1,9 +1,11 @@
-import React, { FC, useState } from "react";
-import axios, { AxiosError } from "axios";
+import  { FC, useState } from "react";
+import  { AxiosError } from "axios";
+import { useNavigate } from 'react-router-dom';
 
-import { CreateUserInput } from "../../components/auth/RegisterForm";
+import { CreateUserInput } from "../../schema/userSchema";
 import RegisterForm from "../../components/auth/RegisterForm";
 import ErrorModal from "../../components/shared/ErrorModal";
+import { registerUser } from "../../api/userApi";
 
 interface IError {
   message: string;
@@ -11,15 +13,13 @@ interface IError {
 }
 
 const RegisterPage: FC = (props) => {
+  const navigate = useNavigate();
   const [error, setError] = useState<null | IError>(null);
 
   async function onSubmitHandler(values: CreateUserInput) {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/users/register",
-        { ...values }
-      );
-      console.log(response);
+      await registerUser(values);
+      navigate("/")
     } catch (err) {
       const error = err as AxiosError<IError>;
       const response = error.response?.data as IError;

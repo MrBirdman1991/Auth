@@ -1,33 +1,17 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { object, string, TypeOf } from "zod";
 
 import Button from "../shared/Button";
 import Input from "../shared/Input";
+import { createUserSchema, CreateUserInput } from "../../schema/userSchema";
 
 interface IProps {
   onSubmit: (e: any) => void;
 }
 
-export type CreateUserInput = TypeOf<typeof createUserSchema>;
+const userSchema = createUserSchema()
 
-const createUserSchema = object({
-  email: string({
-    required_error: "Email is required",
-  }).email("not valid email"),
-
-  password: string({
-    required_error: "password is required",
-  }).min(6, "Password too short - should be 6 chars"),
-
-  passwordConfirmation: string({
-    required_error: "password is required",
-  }).min(6, "Password too short - should be 6 chars"),
-}).refine((data) => data.password === data.passwordConfirmation, {
-  message: "Passwords do not match",
-  path: ["passwordConfirmation"],
-});
 
 const RegisterForm: FC<IProps> = ({ onSubmit }) => {
   const {
@@ -36,7 +20,7 @@ const RegisterForm: FC<IProps> = ({ onSubmit }) => {
     handleSubmit,
   } = useForm<CreateUserInput>({
     mode: "onBlur",
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(userSchema),
   });
 
   return (
