@@ -10,6 +10,7 @@ export interface UserInput {
 export interface UserDocument extends UserInput, Document {
   createdAt: Date;
   updatedAt: Date;
+  matchPasswords: (password: UserInput["password"]) => boolean;
 }
 
 const userSchema = new Schema(
@@ -24,11 +25,16 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-    const user = this as any;
+    const user = this;
     const salt = await bcrypt.genSalt(12);
     user.password = await bcrypt.hash(user.password, salt);
     next();
   });
+
+userSchema.methods.matchPasswords = async function (password: UserInput["password"]) {
+  const user = this;
+  return await bcrypt.compare(password, user.password);
+}
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 

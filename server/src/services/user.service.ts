@@ -1,11 +1,11 @@
 import User, { UserInput } from "../models/user.model";
 import {omit} from "lodash";
 
-export async function isExistingUser(email: UserInput["email"]){
+export async function existingUser(email: UserInput["email"]){
     const user = await User.findOne({email});
     if(!email || !user) return false;
 
-    return true;
+    return user;
 }
 
 export async function createUser(input: UserInput){

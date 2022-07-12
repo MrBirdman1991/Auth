@@ -4,21 +4,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Button from "../shared/Button";
 import Input from "../shared/Input";
-import { createUserSchema, CreateUserInput } from "../../schema/userSchema";
+import { loginUserSchema, LoginUserInput } from "../../schema/userSchema";
 
 interface IProps {
-  onSubmit: (value: CreateUserInput) => void;
+  onSubmit: (value: LoginUserInput) => void;
 }
 
-const userSchema = createUserSchema()
+const userSchema = loginUserSchema()
 
 
-const RegisterForm: FC<IProps> = ({ onSubmit }) => {
+const LoginForm: FC<IProps> = ({ onSubmit }) => {
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CreateUserInput>({
+  } = useForm<LoginUserInput>({
     mode: "onBlur",
     resolver: zodResolver(userSchema),
   });
@@ -41,17 +41,9 @@ const RegisterForm: FC<IProps> = ({ onSubmit }) => {
         errorMessage={errors.password?.message}
       />
 
-      <Input
-        id="passwordConfirmation"
-        type="password"
-        label="password repeat"
-        register={register("passwordConfirmation")}
-        errorMessage={errors.passwordConfirmation?.message}
-      />
-
       <Button type="submit">Submit</Button>
     </form>
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

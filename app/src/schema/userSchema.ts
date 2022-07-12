@@ -1,8 +1,9 @@
 import { object, string, TypeOf } from "zod";
 
-export type CreateUserInput = TypeOf<typeof userSchema>;
+export type CreateUserInput = TypeOf<typeof regiserSchema>;
+export type LoginUserInput = TypeOf<typeof regiserSchema>;
 
-const userSchema = object({
+const regiserSchema = object({
     email: string({
       required_error: "Email is required",
     }).email("not valid email"),
@@ -19,4 +20,16 @@ const userSchema = object({
     path: ["passwordConfirmation"],
   });
 
-export const createUserSchema = () => userSchema;
+  const loginSchema = object({
+    email: string({
+      required_error: "Email is required",
+    }).email("not valid email"),
+  
+    password: string({
+      required_error: "password is required",
+    }).min(6, "Password too short - should be 6 chars"),
+  })
+
+export const createUserSchema = () => regiserSchema;
+
+export const loginUserSchema = () => loginSchema;
