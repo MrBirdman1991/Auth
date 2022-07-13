@@ -1,5 +1,6 @@
 import  { FC, useState } from "react";
-import  { AxiosError } from "axios";
+import   { AxiosError } from "axios";
+import axios from "../../api/axiosInstance"
 import { useNavigate } from 'react-router-dom';
 
 import { CreateUserInput } from "../../schema/userSchema";
@@ -18,9 +19,9 @@ const LoginPage: FC = (props) => {
 
   async function onSubmitHandler(values: CreateUserInput) {
     try {
-      const response = await loginUser(values)
-      console.log(response)
-      //navigate("/")
+      const {data} = await loginUser(values)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.accessKey}`
+      navigate("/")
     } catch (err) {
       const error = err as AxiosError<IError>;
       const response = error.response?.data as IError;
