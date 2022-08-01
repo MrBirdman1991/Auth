@@ -1,15 +1,19 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useContext, useEffect } from "react";
 import axios from "../../api/axiosInstance"
+import { healthCheck } from "../../api/healthCheckApi";
+import { AuthContext } from "../../context/AuthContext";
 
 interface IProps {
 
 }
 
 const HomePage: FC<IProps> = (props) => {
+  const authContext = useContext(AuthContext);
   useEffect(() => {
     (async()=> {
-     const response = await axios.get("/helper/healthcheck");
-     console.log(response)
+     const response = await healthCheck()
+     console.log(response);
+     console.log(authContext.authState);
     })()
   }, [])
   return (

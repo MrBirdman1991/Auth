@@ -6,7 +6,6 @@ const router = Router();
 //@desc     checks if server is running
 //@access   Public
 router.get("/healthcheck", (req, res, next) => {
-    console.log(req.headers)
     res.sendStatus(200)
 })
 

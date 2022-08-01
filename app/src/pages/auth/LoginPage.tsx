@@ -1,12 +1,12 @@
-import  { FC, useState } from "react";
+import  { FC, useState, useContext } from "react";
 import   { AxiosError } from "axios";
-import axios from "../../api/axiosInstance"
 import { useNavigate } from 'react-router-dom';
 
 import { CreateUserInput } from "../../schema/userSchema";
 import LoginForm from "../../components/auth/LoginForm";
 import ErrorModal from "../../components/shared/ErrorModal";
-import { loginUser, registerUser } from "../../api/userApi";
+import { loginUser} from "../../api/userApi";
+import { AuthActionTypes, AuthContext } from "../../context/AuthContext";
 
 interface IError {
   message: string;
@@ -14,13 +14,14 @@ interface IError {
 }
 
 const LoginPage: FC = (props) => {
+  const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState<null | IError>(null);
 
   async function onSubmitHandler(values: CreateUserInput) {
     try {
       const {data} = await loginUser(values)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.accessKey}`
+      authContext.authDispatch({type: AuthActionTypes.SET_AUTH, payload: data.data.accessKey})
       navigate("/")
     } catch (err) {
       const error = err as AxiosError<IError>;
