@@ -1,25 +1,28 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import Layout from "./components/shared/Layout";
 import Login from "./pages/auth/LoginPage";
 import Register from "./pages/auth/RegisterPage";
 import Dashboard from "./pages/dashboard/DashboardPage";
 import Home from "./pages/home/HomePage";
+import RequireAuth from "./components/auth/RequireAuth";
 
 function Router() {
   return (
-    <div className="w-screen min-h-screen bg-gray-100">
-      <header></header>
-      <main className="min-h-screen flex justify-center items-center">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/*Protected Route */}
+        <Route element={<RequireAuth/>}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Routes>
-      </main>
-      <footer></footer>
-    </div>
+        </Route>
+
+        <Route path="*" element={<h1>404 Not Found</h1>} />
+      </Route>
+    </Routes>
   );
 }
 

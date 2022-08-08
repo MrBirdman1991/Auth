@@ -1,5 +1,4 @@
-import React, { FC, useContext, useEffect } from "react";
-import axios from "../../api/axiosInstance"
+import  { FC, useContext, useEffect } from "react";
 import { healthCheck } from "../../api/healthCheckApi";
 import { AuthContext } from "../../context/AuthContext";
 
