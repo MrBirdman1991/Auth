@@ -14,7 +14,7 @@ router.get("/healthcheck", (req, res, next) => {
 //@desc     checks if user is logged in
 //@access   private
 router.get("/authcheck",checkAuth, (req, res, next) => {
-    res.json("the user is ...")
+    res.json("the user is ... " + res.locals.user)
 })
 
 export default router;

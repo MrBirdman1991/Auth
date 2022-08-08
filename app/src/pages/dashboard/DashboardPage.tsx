@@ -1,16 +1,19 @@
-import { FC, useEffect } from "react";
-import { authCheck } from "../../api/healthCheckApi";
+import { FC, useEffect, useState } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+
 
 interface IProps {}
 
 const DashboardPage: FC<IProps> = (props) => {
+  const [message, setMessage] = useState("");
+  const axios = useAxiosPrivate();
 
   useEffect(() => {
     const controller = new AbortController();
     (async() => {
       try{
-        const response = await authCheck({signal: controller.signal})
-        console.log(response);
+        const response =  await axios.get("/helper/authcheck")
+        setMessage(response.data);
       }catch(err){
         console.log(err)
       }
@@ -24,6 +27,7 @@ const DashboardPage: FC<IProps> = (props) => {
   return (
     <>
       <h1 className='text-5xl text-gray-800'>Hallo Dashboard</h1>
+      <h2 className='text-5xl text-gray-800'>{message}</h2>
     </>
   );
 };

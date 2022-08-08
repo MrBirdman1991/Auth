@@ -8,6 +8,7 @@ import {
   IJsonResponse,
   SuccessResponse,
 } from "../utils/Response";
+import { userSchema } from "../schema/user.schema";
 const _ = undefined;
 
 export const createUserHandler = async (
