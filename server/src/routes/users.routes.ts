@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createUserHandler,
   loginUserHandler,
+  refreshTokenHandler
 } from "../controllers/user.controllers";
 import validate from "../middleware/validateResource";
 import { userSchema } from "../schema/user.schema";
@@ -17,5 +18,10 @@ router.post("/register", validate(userSchema), createUserHandler);
 //@desc     logs user into Dashboard
 //@access   Public
 router.post("/login", validate(userSchema), loginUserHandler);
+
+//@route    GET /api/users/refresh
+//@desc     refreshes a accessKey
+//@access   Public
+router.get("/refresh", refreshTokenHandler);
 
 export default router;

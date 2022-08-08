@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import connect from "./utils/connect";
 import logger from "./utils/logger";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 
 import helperRoutes from "./routes/helper.routes";
@@ -20,6 +21,8 @@ app.use(
       credentials: true
     })
   );
+
+app.use(cookieParser());  
 
 app.use(express.json()); 
 app.use("/api/helper", helperRoutes);

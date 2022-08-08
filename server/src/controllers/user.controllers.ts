@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { UserInput } from "../models/user.model";
 import { createUser, existingUser } from "../services/user.service";
-import { signJwt } from "../utils/jwt.utils";
+import { signJwt, verifyJwt } from "../utils/jwt.utils";
+import {JwtPayload} from "jsonwebtoken";
 import {
   ErrorResponse,
   IJsonResponse,
@@ -49,9 +50,40 @@ export const loginUserHandler = async (
       { expiresIn: "15min" }
     );
 
+    const refreshKey = signJwt(
+      { id: user.id },
+      process.env.REFRESH_KEY as string,
+      { expiresIn: "1d" }
+    );
+
+
+    res.cookie("jwt", refreshKey, {httpOnly: true, maxAge: 24 * 60 * 60 * 1000});  
     res.json(new SuccessResponse(_, "user Logged in", {isLoggedIn: true, accessKey}));
   } catch (err) {
     const error = err as IJsonResponse;
     next(new ErrorResponse(error.code, error.message));
   }
 };
+
+
+export const refreshTokenHandler = (req: Request, res: Response, next: NextFunction) => {
+  try{
+    const cookies = req.cookies;
+    if(!cookies.jwt) throw new ErrorResponse(401, "Unauthorized");
+    
+    const refreshToken = cookies.jwt as string;
+
+    const decode = verifyJwt(refreshToken, process.env.REFRESH_KEY as string) as JwtPayload;
+    if(!decode)  throw new ErrorResponse(401, "Unauthorized");
+
+    const accessKey = signJwt(
+      { id: decode.id },
+      process.env.ACCESS_KEY as string,
+      { expiresIn: "15min" }
+    );
+    res.json(new SuccessResponse(_, "user refreshed AccessKey", {isLoggedIn: true, accessKey}));
+  }catch(err){
+    const error = err as IJsonResponse;
+    next(new ErrorResponse(error.code, error.message));
+  }
+}
